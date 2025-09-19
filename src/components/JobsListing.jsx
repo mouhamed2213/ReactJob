@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { FaMapMarked } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 // this component tak as props job
+
 function JobsListing({ job }) {
   const [fullDescription, setFullDescription] = useState(false);
-
   let description = job.description;
 
   if (!fullDescription) {
     description = description.substring(0, 90) + '...';
-    console.log(description);
   }
 
   return (
@@ -37,12 +37,12 @@ function JobsListing({ job }) {
             {job.location}
             <FaMapMarked />
           </div>
-          <a
-            href={`job/${job.id}`}
+          <NavLink
+            to={`job/${job.id}`}
             className="h-[36px] bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-center text-sm"
           >
             Read More
-          </a>
+          </NavLink>
         </div>
       </div>
     </div>

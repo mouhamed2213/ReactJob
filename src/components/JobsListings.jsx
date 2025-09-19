@@ -1,8 +1,32 @@
-import jobs from '../jobs.json';
+// import jobs from '../jobs.json';
 import JobsListing from './JobsListing';
+import { useEffect, useState } from 'react';
 
 function JobsListings() {
-  console.log(jobs);
+  const apiUrl = 'http://localhost:8000/jobs';
+
+  // set the stae of the jobs
+  const [jobs, setJobs] = useState([]);
+  // set The loader when fetching data
+  const [loader, setLoader] = useState(true);
+
+  // set the effect  hook
+  useEffect(() => {
+    // fetching data from the enpoind
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch(apiUrl); // fetch data
+        const data = await res.json();
+        setJobs(data);
+        console.log(data);
+      } catch (error) {
+        console.log('Error while handling data ', error);
+      }
+    };
+    // call the function
+    fetchJobs();
+  }, []);
+
   const newJobs = jobs.slice(0, 3);
   return (
     <section className="bg-blue-50 px-4 py-10">
