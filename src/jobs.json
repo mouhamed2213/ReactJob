@@ -1,5 +1,5 @@
 {
-  "jobs" :  [
+  "jobs": [
     {
       "id": "1",
       "title": "Senior React Developer",
@@ -83,7 +83,48 @@
         "contactEmail": "contact@ipsumlorem.com",
         "contactPhone": "555-555-5555"
       }
+    },
+    {
+      "id": "171d",
+      "type": "Remote",
+      "title": "Test",
+      "description": "test job",
+      "salary": "Under $50K",
+      "location": "Dakar",
+      "companyInfo": {
+        "name": "Bassirou comp",
+        "description": "awesome comp",
+        "contact_email": "dsadas@dasdsa.com",
+        "contact_phone": "22222222222"
+      }
+    },
+    {
+      "id": "a8d0",
+      "type": "Remote",
+      "title": "Test",
+      "description": "test job",
+      "salary": "Under $50K",
+      "location": "Dakar",
+      "companyInfo": {
+        "name": "Bassirou comp",
+        "description": "awesome comp",
+        "contact_email": "dsadas@dasdsa.com",
+        "contact_phone": "22222222222"
+      }
+    },
+    {
+      "id": "5eb2",
+      "type": "Remote",
+      "title": "Test",
+      "description": "test job",
+      "salary": "Under $50K",
+      "location": "Dakar",
+      "companyInfo": {
+        "name": "Bassirou comp",
+        "description": "awesome comp",
+        "contact_email": "dsadas@dasdsa.com",
+        "contact_phone": "22222222222"
+      }
     }
   ]
-
 }
