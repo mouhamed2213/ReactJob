@@ -1,54 +1,65 @@
-import { React, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { React, use, useEffect, useState } from 'react';
+import { data, useNavigate, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/ReactToastify.css';
+
 const AddJobPage = () => {
   const navigate = useNavigate();
-  // handle the form
-  const [title, setTitle] = useState('');
-  const [type, setType] = useState('Full-Time');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [salary, setSalary] = useState('Under $50K');
-  const [company, setCompany] = useState('');
-  const [company_description, setCompanyDescription] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
+  const { id } = useParams();
+  const [fieldInput, setFieldInput] = useState('');
+  const [formData, setFormData] = useState({
+    type: '',
+    title: '',
+    description: '',
+    salary: '',
+    location: '',
+    company: {
+      name: '',
+      description: '',
+      contactEmail: '',
+      contactPhone: '',
+    },
+  });
 
-  // handle job request
-  const handleAddJob = async (newJob) => {
-    const r = await fetch('http://localhost:8000/jobs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newJob),
-    });
+  useEffect(() => {
+    // corresponding  job
+    const getJob = async (id) => {
+      try {
+        const res = await fetch(`http://localhost:8000/jobs/${id}`);
+        const data = await res.json();
+        setFormData(data);
+      } catch (error) {
+        console.log('Error', error);
+      }
+    };
 
-    if (r.status === 201) {
-      toast.success('Job created successfully');
-      console.log(newJob);
-      return navigate('/jobs');
-    } else {
-      throw new Error(' Error Cannot create a job currently');
+    getJob(id);
+  }, [id]);
+
+  // update method
+  const updateJob = async (updateData, id) => {
+    try {
+      const res = await fetch(`http://localhost:8000/jobs/${id}`, {
+        method: 'PUT',
+        header: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!res.ok) {
+        return;
+      }
+      toast.success('update successfull');
+      navigate('/jobs');
+    } catch (e) {
+      console.log('Erreur Reseau');
     }
   };
 
   const onSubmitForm = (e) => {
     e.preventDefault(false);
-    const newJob = {
-      type,
-      title,
-      description,
-      salary,
-      location,
-      company: {
-        name: company,
-        description: company_description,
-        contactEmail,
-        contactPhone,
-      },
-    };
-    handleAddJob(newJob);
+    updateJob(formData, id);
   };
 
   return (
@@ -73,8 +84,10 @@ const AddJobPage = () => {
                   name="type"
                   className="border rounded w-full py-2 px-3"
                   required
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
+                  value={formData.type}
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
                 >
                   <option value="Full-Time">Full-Time</option>
                   <option value="Part-Time">Part-Time</option>
@@ -94,8 +107,10 @@ const AddJobPage = () => {
                   className="border rounded w-full py-2 px-3 mb-2"
                   placeholder="eg. Beautiful Apartment In Miami"
                   required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                 />
               </div>
               <div className="mb-4">
@@ -111,8 +126,10 @@ const AddJobPage = () => {
                   className="border rounded w-full py-2 px-3"
                   rows="4"
                   placeholder="Add any job duties, expectations, requirements, etc"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                 ></textarea>
               </div>
 
@@ -128,8 +145,10 @@ const AddJobPage = () => {
                   name="salary"
                   className="border rounded w-full py-2 px-3"
                   required
-                  value={salary}
-                  onChange={(e) => setSalary(e.target.value)}
+                  value={formData.salary}
+                  onChange={(e) =>
+                    setFormData({ ...formData, salary: e.target.value })
+                  }
                 >
                   <option value="Under $50K">Under $50K</option>
                   <option value="$50K - 60K">$50K - $60K</option>
@@ -156,8 +175,10 @@ const AddJobPage = () => {
                   className="border rounded w-full py-2 px-3 mb-2"
                   placeholder="Company Location"
                   required
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
                 />
               </div>
 
@@ -176,8 +197,10 @@ const AddJobPage = () => {
                   name="company"
                   className="border rounded w-full py-2 px-3"
                   placeholder="Company Name"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
+                  value={formData.company.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, company: e.target.value })
+                  }
                 />
               </div>
 
@@ -194,8 +217,10 @@ const AddJobPage = () => {
                   className="border rounded w-full py-2 px-3"
                   rows="4"
                   placeholder="What does your company do?"
-                  value={company_description}
-                  onChange={(e) => setCompanyDescription(e.target.value)}
+                  value={formData.company.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                 ></textarea>
               </div>
 
@@ -213,8 +238,10 @@ const AddJobPage = () => {
                   className="border rounded w-full py-2 px-3"
                   placeholder="Email address for applicants"
                   required
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
+                  value={formData.company.contactEmail}
+                  onChange={(e) =>
+                    setFormData({ ...formData, contactEmail: e.target.value })
+                  }
                 />
               </div>
               <div className="mb-4">
@@ -230,8 +257,10 @@ const AddJobPage = () => {
                   name="contact_phone"
                   className="border rounded w-full py-2 px-3"
                   placeholder="Optional phone for applicants"
-                  value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
+                  value={formData.company.contactPhone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, contactPhone: e.target.value })
+                  }
                 />
               </div>
 
@@ -240,7 +269,7 @@ const AddJobPage = () => {
                   className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
-                  Add Job
+                  Edit
                 </button>
               </div>
             </form>
